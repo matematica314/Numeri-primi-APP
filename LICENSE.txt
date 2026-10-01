@@ -1,0 +1,58 @@
+LICENZA PROPRIETARIA D’USO — APP INTERATTIVA "NUMERI PRIMI"
+
+Copyright © 2026 Claudia Bartoli.
+Tutti i diritti riservati.
+
+1. OGGETTO
+
+La presente licenza disciplina l’utilizzo dell' APP INTERATTIVA "NUMERI PRIMI” e dei materiali inclusi nel progetto, nei limiti dei diritti detenuti da Claudia Bartoli.
+
+La riserva dei diritti riguarda il codice e i contenuti originali protetti, comprese immagini, illustrazioni, personaggi, elementi grafici, testi, attività didattiche, animazioni e materiali audiovisivi.
+
+2. UTILIZZO CONSENTITO
+
+Chiunque può accedere all’applicazione attraverso il sito ufficiale o gli altri canali autorizzati da Claudia Bartoli e utilizzarne le funzionalità per uso personale, didattico e professionale, anche in classe, durante lezioni o attività formative.
+
+Questa autorizzazione consente l’utilizzo dell’applicazione, ma non concede il diritto di riprodurla, distribuirla, modificarla o commercializzarla.
+
+È consentito condividere il collegamento al sito ufficiale.
+
+Sono consentite le copie tecniche necessarie al normale funzionamento dell’applicazione, comprese quelle effettuate automaticamente dal browser e dalle eventuali funzionalità offline messe a disposizione dall’autrice.
+
+3. RIPRODUZIONE, DISTRIBUZIONE E VENDITA
+
+Salvo preventiva autorizzazione scritta di Claudia Bartoli, è vietato:
+
+- copiare, estrarre o riprodurre il codice o i contenuti del progetto, integralmente o parzialmente, al di fuori degli utilizzi espressamente consentiti;
+- distribuire, condividere, cedere o ripubblicare copie dell’applicazione o dei suoi materiali, anche gratuitamente;
+- caricare l’applicazione o i suoi contenuti su altri siti, repository, piattaforme, applicazioni o archivi;
+- modificare, adattare o incorporare il codice o i materiali protetti in altri progetti;
+- vendere, rivendere, concedere in sublicenza o commercializzare l’applicazione o i suoi contenuti, anche come parte di altri prodotti o servizi;
+- richiedere un pagamento per fornire a terzi l’accesso all’applicazione senza autorizzazione;
+- rimuovere o alterare le indicazioni di paternità, gli avvisi di copyright o la presente licenza.
+
+Il semplice utilizzo dell’applicazione durante una lezione o un’attività professionale retribuita è consentito e non costituisce, di per sé, rivendita dell’applicazione.
+
+4. IMMAGINI E MATERIALI VISIVI
+
+Le immagini, le illustrazioni, i personaggi e gli altri materiali visivi sui quali Claudia Bartoli detiene diritti non sono concessi per il riutilizzo separato dall’applicazione.
+
+La loro visualizzazione nell’applicazione è consentita. La loro estrazione, copia, modifica, distribuzione, ripubblicazione o vendita richiede una preventiva autorizzazione scritta, anche quando il riutilizzo è gratuito o accompagnato dall’indicazione dell’autrice.
+
+5. MATERIALI E COMPONENTI DI TERZI
+
+Gli eventuali componenti software, materiali e contenuti di terzi restano soggetti alle rispettive licenze e ai diritti dei loro titolari.
+
+La presente licenza non sostituisce né limita le autorizzazioni previste da tali licenze e non attribuisce a Claudia Bartoli diritti appartenenti a terzi.
+
+6. ECCEZIONI E DIRITTI PREESISTENTI
+
+Restano salvi gli utilizzi consentiti da disposizioni inderogabili di legge, le eccezioni e limitazioni al diritto d’autore e gli eventuali diritti già validamente concessi.
+
+Quando il progetto è ospitato su una piattaforma esterna, restano inoltre salve le autorizzazioni necessariamente derivanti dalle condizioni applicabili della piattaforma. Tali autorizzazioni non comportano ulteriori permessi di riutilizzo o commercializzazione.
+
+7. RISERVA DEI DIRITTI
+
+La disponibilità pubblica dell’applicazione o del suo codice non costituisce una concessione in pubblico dominio né un rilascio con licenza open source.
+
+Ogni diritto non espressamente concesso resta riservato ai rispettivi titolari. Per utilizzi ulteriori è necessaria una preventiva autorizzazione scritta di Claudia Bartoli.

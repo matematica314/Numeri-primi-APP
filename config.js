@@ -5,7 +5,8 @@ window.MATICA_CONFIG = {
   video3: 'https://youtu.be/d5IdHKKQshc', // Come si trovano? Crivello
   video4: 'https://youtu.be/huQlt7OHAg4', // Approfondimento Eratostene già fornito
   video5: '', // Eventuale secondo video nella stanza di Eratostene
-  video6: 'https://youtu.be/tS86M_fq8WI', // Multipli e divisori
+  video6: 'https://youtu.be/JVhMTu2Jbks', // Multipli e divisori
+  video7: 'https://www.youtube.com/watch?v=spPPAS7LNLg', // Criteri di divisibilità (provvisorio)
   crivello: 'https://crivello-matica.netlify.app/',
   email: 'claudiabartoli77@libero.it'
 };

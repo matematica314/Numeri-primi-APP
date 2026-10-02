@@ -34,42 +34,71 @@ intro.querySelector('.intro-close').onclick=()=>{intro.classList.add('hide');tab
 let wrap=el('div','portal-wrap'),isWatched=!!watched[s.video],p=el('button','portal');p.setAttribute('aria-label',isWatched?'Attraversa il portale':'Apri la lezione video');p.innerHTML=`<span class="preview" style="background-image:url('${A+(isWatched?s.preview:s.bg)}')"></span><span class="playmark">${isWatched?'✧':'▶'}</span>`;p.onclick=()=>isWatched?travel(index+1):playVideo(s.video,true);wrap.append(p,el('div','portal-label',isWatched?'✦ Clicca per entrare nella stanza':'▶ Clicca per guardare la lezione'));root.append(wrap);let aside=el('div','side-actions');aside.append(btn('Riapri il video',()=>playVideo(s.video,true),'btn alt'));root.append(aside);stage.append(root)}
 
 const factText=n=>n<2?'Non ho una scomposizione in fattori primi.':`Sono ${factor(n).join(' × ')}.`;
-function makeMarkers(group){if(group==='primes'){
-// Coordinates of actual characters in panorama-primi.jpg, 2048 × 1024. Interactive targets are invisible overlays, not separate numbered pills.
-const xy=[
-[1,222,532],[2,371,477],[3,431,484],[5,521,478],[7,385,346],[11,434,386],[13,475,393],[17,424,322],[19,370,418],[23,515,404],
-[4,813,382],[6,846,388],[8,1278,371],[9,1303,480],[10,789,482],[15,791,536],[16,1329,540],[18,1310,412],[20,1351,480]];
-const texts={1:'Sono 1: non sono né primo né composto.',2:'Sono 2, l’unico numero primo pari.',3:'Sono 3, il più piccolo primo dispari.'};
-return xy.map(([n,x,y])=>({label:String(n),lon:90-x/2048*360,lat:90-y/1024*180,type:'numberhit',text:texts[n]||(prime(n)?`Sono ${n}: ho esattamente due divisori positivi, 1 e me stesso.`:`Sono ${n}: ${factText(n)} Sono composto, perché ho più di due divisori positivi.`)}));}
+// Hotspots use normalized texture coordinates, shared with the panorama itself.
+function region(label,x,y,w,h,text,type='numberhit',action=null){return {label:String(label),u:x,v:y,uw:w,vh:h,text,type,action}}
+function makeMarkers(group){
+if(group==='primes'){
+const boxes=[[1,722,460,55,76],[2,455,443,65,84],[3,514,443,60,79],[5,568,444,50,72],[7,478,374,48,63],[11,530,381,48,50],[13,475,318,40,42],[17,523,325,44,45],[19,564,342,42,44],[23,584,386,50,48],[4,870,384,40,46],[6,912,369,44,54],[8,958,369,44,54],[9,1002,379,43,62],[10,897,420,48,44],[12,951,418,56,48],[15,870,471,47,51],[16,918,470,47,52],[18,970,474,49,60],[20,1027,475,66,60]];
+return boxes.map(([n,x,y,w,h])=>region(n,x/1456,y/720,w/1456,h/720,n===1?'Sono 1: non sono né primo né composto. Ho un solo divisore positivo.':prime(n)?`Sono ${n}: sono primo! Ho esattamente due divisori positivi, 1 e ${n}.`:`Sono ${n}: sono composto! ${n} = ${factor(n).join(' × ')}. Ho più di due divisori positivi.`));
+}
 if(group==='euclid')return [
-{label:'✦',lon:-56,lat:3,text:'Euclide scrisse gli Elementi. Nel libro IX si trova una dimostrazione dell’infinità dei numeri primi.'},
-{label:'∞',lon:-20,lat:0,text:'I numeri primi sono infiniti: nessun elenco finito può contenerli tutti.'},
-{label:'P',lon:24,lat:3,text:'Se supponiamo di conoscere tutti i primi e consideriamo il loro prodotto più 1, otteniamo un numero non divisibile per nessuno dei primi dell’elenco.'},
-{label:'?',lon:64,lat:2,text:'Quel nuovo numero può essere primo oppure composto. Nel secondo caso, ha almeno un fattore primo non presente nell’elenco: l’ipotesi iniziale è impossibile.'}];
+region('Euclide',.50,.61,.17,.34,'Euclide scrisse gli Elementi. Nel libro IX si trova una dimostrazione dell’infinità dei numeri primi.'),
+region('La dimostrazione',.48,.84,.18,.14,'I numeri primi sono infiniti. Se supponiamo di averli elencati tutti, il loro prodotto più 1 non è divisibile per nessuno dei primi dell’elenco. È primo oppure ha un fattore primo fuori dall’elenco: in entrambi i casi, l’elenco non era completo.'),
+region('Passaggio segreto per il castello di Arsinoe',.749,.433,.08,.36,'','windowhit',()=>travel(4))];
 if(group==='eratosthenes')return [
-{label:'2',lon:-62,lat:0,text:'Comincio dal 2 e cancello tutti i suoi multipli maggiori di 2.'},
-{label:'3',lon:-25,lat:0,text:'Il primo numero non cancellato dopo il 2 è il 3. Cancello i suoi multipli maggiori di 3.'},
-{label:'5',lon:20,lat:0,text:'Proseguo con il primo numero non cancellato, senza cancellare il numero stesso.'},
-{label:'√',lon:58,lat:0,text:'Per trovare i primi fino a N basta eliminare i multipli dei primi non superiori a √N.'}];
-return [
-{label:20,lon:-92,lat:8,text:'Sono 20. Sono multiplo di 2, 4, 5 e 10 (e anche di 1 e 20).'},
-{label:6,lon:-55,lat:7,text:'Sono 6: sono divisore di 12 e multiplo di 1, 2 e 3.'},
-{label:12,lon:-16,lat:10,text:'Sono 12: sono multiplo di 3 e 4; 2, 3, 4 e 6 sono miei divisori.'},
-{label:15,lon:25,lat:9,text:'Sono 15: 3 e 5 sono miei divisori e io sono multiplo di entrambi.'},
-{label:24,lon:68,lat:8,text:'Sono 24: sono multiplo di 6, 8 e 12. Sono divisore di 48.'},
-{label:1,lon:110,lat:8,text:'Sono 1: divisore di ogni numero naturale positivo, ma non sono primo né composto.'},
-{label:9,lon:155,lat:9,text:'Sono 9: sono multiplo di 3 e divisore di 18, 27 e 36.'}];}
-class Pano{constructor(node,file){this.node=node;this.node.innerHTML='';this.scene=new THREE.Scene();this.camera=new THREE.PerspectiveCamera(72,node.clientWidth/node.clientHeight,1,1100);this.renderer=new THREE.WebGLRenderer({antialias:true});this.renderer.outputEncoding=THREE.sRGBEncoding;this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));this.renderer.setSize(node.clientWidth,node.clientHeight);node.append(this.renderer.domElement);this.lon=0;this.lat=0;this.drag=false;this.fov=72;this.markerObjects=[];this.listeners=[];let geo=new THREE.SphereGeometry(500,64,44);geo.scale(-1,1,1);this.mat=new THREE.MeshBasicMaterial({color:0x101835});this.sphere=new THREE.Mesh(geo,this.mat);this.scene.add(this.sphere);new THREE.TextureLoader().load(A+file,tex=>{if(this.dead){tex.dispose();return}tex.encoding=THREE.sRGBEncoding;this.mat.map=tex;this.mat.needsUpdate=true},undefined,()=>{this.node.insertAdjacentHTML('beforeend','<p>Immagine panoramica non caricata.</p>')});this.install();this.tick()}
-listen(node,event,fn,opts){node.addEventListener(event,fn,opts);this.listeners.push([node,event,fn,opts])}
-install(){const c=this.node;let old=null;this.listen(c,'pointerdown',e=>{if(e.target.closest('button'))return;this.drag=true;old=[e.clientX,e.clientY];c.classList.add('dragging');c.setPointerCapture(e.pointerId)});this.listen(c,'pointermove',e=>{if(!this.drag||!old)return;let dx=e.clientX-old[0],dy=e.clientY-old[1];this.lon-=dx*.13;this.lat=Math.max(-60,Math.min(60,this.lat+dy*.13));old=[e.clientX,e.clientY]});this.listen(c,'pointerup',()=>{this.drag=false;old=null;c.classList.remove('dragging')});this.listen(c,'wheel',e=>{e.preventDefault();this.fov=Math.max(32,Math.min(98,this.fov+e.deltaY*.05));this.camera.fov=this.fov;this.camera.updateProjectionMatrix()},{passive:false});this.ro=new ResizeObserver(()=>{if(this.dead)return;let w=c.clientWidth,h=c.clientHeight;if(w&&h){this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.renderer.setSize(w,h)}});this.ro.observe(c)}
-markers(items,onClick){this.markerObjects=items.map((item)=>{const b=btn(item.type==='numberhit'?'':String(item.label),()=>onClick(item),'pano-marker '+(item.type||'info'));b.setAttribute('aria-label','Esplora: '+item.label);this.node.append(b);return {item,b}})}
-tick(){if(this.dead)return;let phi=THREE.MathUtils.degToRad(90-this.lat),theta=THREE.MathUtils.degToRad(this.lon);this.camera.lookAt(new THREE.Vector3(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta)));this.camera.updateMatrixWorld();let w=this.node.clientWidth,h=this.node.clientHeight;for(const {item,b} of this.markerObjects){let p=THREE.MathUtils.degToRad(90-(item.lat||0)),t=THREE.MathUtils.degToRad(item.lon);const v=new THREE.Vector3(490*Math.sin(p)*Math.cos(t),490*Math.cos(p),490*Math.sin(p)*Math.sin(t));const cam=v.clone().applyMatrix4(this.camera.matrixWorldInverse);if(cam.z>=0){b.style.display='none';continue}v.project(this.camera);if(Math.abs(v.x)>1.07||Math.abs(v.y)>1.08){b.style.display='none';continue}b.style.display='block';b.style.left=((v.x+1)*.5*w)+'px';b.style.top=((-v.y+1)*.5*h)+'px'}this.renderer.render(this.scene,this.camera);this.raf=requestAnimationFrame(()=>this.tick())}
+region('2',.25,.5,.04,.08,'Comincio dal 2 e cancello i suoi multipli maggiori di 2.'),
+region('3',.40,.5,.04,.08,'Il primo numero non cancellato dopo il 2 è il 3. Cancello i suoi multipli maggiori di 3.'),
+region('5',.60,.5,.04,.08,'Proseguo con il primo numero non cancellato, senza cancellare il numero stesso.'),
+region('√',.75,.5,.04,.08,'Per trovare i primi fino a N basta eliminare i multipli dei primi non superiori a √N.')];
+return divisorRegions();
+}
+function divisorRegions(){
+const rows=[
+[20,270,530,190,152,'Sono 20: sono multiplo di 2, 4, 5 e 10, e anche di 1 e 20.'],
+[6,483,529,115,142,'Sono 6: sono divisore di 12 e multiplo di 2 e 3. Infatti 12 = 6 × 2 e 6 = 2 × 3.'],
+[12,684,527,153,141,'Sono 12: sono multiplo di 3 e 4. I miei divisori positivi sono 1, 2, 3, 4, 6 e 12.'],
+[15,892,529,151,136,'Sono 15: sono multiplo di 3 e 5. Infatti 15 = 3 × 5.'],
+[24,1127,531,185,140,'Sono 24: sono multiplo di 6, 8 e 12. Sono anche divisore di 48.'],
+[1,1340,528,94,145,'Sono 1: sono divisore di ogni numero naturale positivo. Non sono né primo né composto.'],
+[9,1551,529,117,147,'Sono 9: sono multiplo di 3 e divisore di 18, 27 e 36.']];
+return rows.map(([n,x,y,w,h,text])=>region(n,x/1774,y/887,w/1774,h/887,text));}
+
+class Pano{
+constructor(node,file){
+this.node=node;this.scene=new THREE.Scene();this.camera=new THREE.PerspectiveCamera(72,node.clientWidth/node.clientHeight,1,1100);
+this.renderer=new THREE.WebGLRenderer({antialias:true});this.renderer.outputEncoding=THREE.sRGBEncoding;this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));this.renderer.setSize(node.clientWidth,node.clientHeight);node.append(this.renderer.domElement);
+this.lon=180;this.lat=0;this.fov=72;this.markerObjects=[];this.listeners=[];
+const geo=new THREE.SphereGeometry(500,96,64);geo.scale(-1,1,1);this.mat=new THREE.MeshBasicMaterial({color:0xffffff});this.sphere=new THREE.Mesh(geo,this.mat);this.scene.add(this.sphere);
+new THREE.TextureLoader().load(A+file,tex=>{if(this.dead){tex.dispose();return}tex.encoding=THREE.sRGBEncoding;this.mat.map=tex;this.mat.needsUpdate=true},undefined,()=>{if(!this.dead)this.node.insertAdjacentHTML('beforeend','<p class="pano-hint">Immagine panoramica non caricata.</p>')});
+this.bubble=el('div','pano-bubble hide');this.bubble.setAttribute('role','status');this.bubble.append(btn('×',()=>this.closeBubble(),'bubble-close'),this.bubbleText=el('p'));node.append(this.bubble);this.install();this.tick();
+}
+listen(n,e,f,o){n.addEventListener(e,f,o);this.listeners.push([n,e,f,o])}
+closeBubble(){this.active=null;this.bubble.classList.add('hide')}
+install(){const c=this.node;let start=null,old=null;this.moved=false;
+this.listen(c,'pointerdown',e=>{if(e.target.closest('.pano-controls,.pano-bubble'))return;start=old=[e.clientX,e.clientY];this.moved=false;this.drag=true;});
+this.listen(c,'pointermove',e=>{if(!this.drag||!old)return;const dx=e.clientX-old[0],dy=e.clientY-old[1];if(Math.hypot(e.clientX-start[0],e.clientY-start[1])>7)this.moved=true;if(this.moved){this.lon-=dx*.13;this.lat=Math.max(-60,Math.min(60,this.lat+dy*.13));c.classList.add('dragging')}old=[e.clientX,e.clientY]});
+const stop=()=>{this.drag=false;old=null;c.classList.remove('dragging')};this.listen(window,'pointerup',stop);this.listen(window,'pointercancel',stop);
+this.listen(c,'click',e=>{if(this.moved){e.stopPropagation();e.preventDefault();return}if(!e.target.closest('button,.pano-bubble'))this.closeBubble()},true);
+this.listen(c,'wheel',e=>{e.preventDefault();this.zoom(e.deltaY*.05)},{passive:false});
+this.ro=new ResizeObserver(()=>{if(this.dead)return;const w=c.clientWidth,h=c.clientHeight;if(w&&h){this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.renderer.setSize(w,h)}});this.ro.observe(c);
+}
+markers(items){this.markerObjects=items.map(item=>{const b=btn('',()=>{if(item.action){item.action();return}this.active=item;this.bubbleText.textContent=item.text;this.bubble.classList.remove('hide')},'pano-marker '+item.type);b.setAttribute('aria-label','Esplora: '+item.label);this.node.append(b);return {item,b}})}
+project(u,v){const t=u*Math.PI*2,p=v*Math.PI;const vec=new THREE.Vector3(490*Math.sin(p)*Math.cos(t),490*Math.cos(p),490*Math.sin(p)*Math.sin(t));if(vec.clone().applyMatrix4(this.camera.matrixWorldInverse).z>=-1)return null;vec.project(this.camera);return {x:(vec.x+1)*this.node.clientWidth/2,y:(1-vec.y)*this.node.clientHeight/2}}
+tick(){if(this.dead)return;const phi=THREE.MathUtils.degToRad(90-this.lat),theta=THREE.MathUtils.degToRad(this.lon);this.camera.lookAt(new THREE.Vector3(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta)));this.camera.updateMatrixWorld();const w=this.node.clientWidth,h=this.node.clientHeight;
+for(const {item,b} of this.markerObjects){const q=this.project(item.u,item.v);const corners=[[-1,-1],[1,-1],[-1,1],[1,1]].map(([x,y])=>this.project(item.u+x*item.uw/2,item.v+y*item.vh/2));if(!q||corners.some(c=>!c)||q.x< -100||q.x>w+100||q.y< -100||q.y>h+100){b.style.display='none';continue}const xs=corners.map(c=>c.x),ys=corners.map(c=>c.y);const bw=Math.max(44,Math.max(...xs)-Math.min(...xs)),bh=Math.max(44,Math.max(...ys)-Math.min(...ys));b.style.cssText=`display:block;left:${q.x}px;top:${q.y}px;width:${bw}px;height:${bh}px`;
+}
+if(this.active){const q=this.project(this.active.u,this.active.v-this.active.vh/2);if(!q||q.x<0||q.x>w||q.y<0||q.y>h)this.bubble.style.visibility='hidden';else{this.bubble.style.visibility='visible';const bw=this.bubble.offsetWidth,bh=this.bubble.offsetHeight;this.bubble.style.left=Math.max(8,Math.min(w-bw-8,q.x-bw/2))+'px';this.bubble.style.top=Math.max(64,Math.min(h-bh-110,q.y-bh-12))+'px';}}
+this.renderer.render(this.scene,this.camera);this.raf=requestAnimationFrame(()=>this.tick());
+}
 zoom(d){this.fov=Math.max(32,Math.min(98,this.fov+d));this.camera.fov=this.fov;this.camera.updateProjectionMatrix()}
-dispose(){this.dead=true;cancelAnimationFrame(this.raf);this.ro?.disconnect();this.listeners.forEach(([n,e,f,o])=>n.removeEventListener(e,f,o));this.mat.map?.dispose();this.mat.dispose();this.sphere.geometry.dispose();this.renderer.dispose();this.renderer.domElement.remove()}}
+dispose(){this.dead=true;cancelAnimationFrame(this.raf);this.ro?.disconnect();this.listeners.forEach(([n,e,f,o])=>n.removeEventListener(e,f,o));this.mat.map?.dispose();this.mat.dispose();this.sphere.geometry.dispose();this.renderer.dispose();this.renderer.domElement.remove()}
+}
 function renderPanoScene(s){const node=el('div','pano');stage.append(node);if(!window.THREE){node.innerHTML=`<div class="scene" style="background-image:url('${A+s.bg}')"><div class="intro"><h2>Impossibile caricare il visore 360°</h2><p>Serve la libreria Three.js e una connessione a Internet.</p></div></div>`;return}viewer=new Pano(node,s.bg);const hint=el('div','pano-hint','Trascina per esplorare · clicca direttamente sui numeri · scorri per zoomare');node.append(hint);setTimeout(()=>hint.remove(),7000);
-const markers=makeMarkers(s.group);const panel=el('div','pano-panel',`<h2>${escapeH(s.title)}</h2><p id="factInfo">Sposta lo sguardo e scopri gli hotspot nascosti nella scena.</p>`);node.append(panel);viewer.markers(markers,item=>{const p=$('#factInfo');if(p)p.textContent=item.text});const controls=el('div','pano-controls');node.append(controls);controls.append(btn('＋ Zoom',()=>viewer.zoom(-10),'mini'),btn('－ Zoom',()=>viewer.zoom(10),'mini'));
+const markers=makeMarkers(s.group);viewer.markers(markers);const controls=el('div','pano-controls');node.append(controls);controls.append(btn('＋',()=>viewer.zoom(-10),'mini'),btn('−',()=>viewer.zoom(10),'mini'),btn('Mostra curiosità',e=>{node.classList.toggle('show-hotspots');},'mini'));
+if(s.group==='primes')viewer.lon=120;
+if(s.group==='euclid')viewer.lon=220;
 if(s.group==='eratosthenes'){controls.append(btn('▶ Video Eratostene',()=>playVideo('video4'),'mini'));if(C.video5)controls.append(btn('▶ Secondo video',()=>playVideo('video5'),'mini'))}
-if(s.quiz){controls.append(btn(quizPassed[index]?'✓ Quiz superato · prosegui':'✦ Affronta 5 quesiti',()=>quizPassed[index]?travel(index+1):startQuiz(s.quiz,5,3,()=>{quizPassed[index]=true;travel(index+1)}),'btn'));}else if(s.group==='euclid'){controls.append(btn('➜ Verso il castello di Arsinoe',()=>travel(4),'btn'));}else if(s.group==='eratosthenes'){controls.append(btn('➜ Entra nel crivello interattivo',()=>travel(6),'btn'));}else controls.append(btn('✧ Prosegui',()=>travel(index+1),'btn'));
+if(s.quiz){controls.append(btn(quizPassed[index]?'✓ Quiz superato · prosegui':'✦ Affronta 5 quesiti',()=>quizPassed[index]?travel(index+1):startQuiz(s.quiz,5,3,()=>{quizPassed[index]=true;travel(index+1)}),'btn'));}else if(s.group==='euclid'){hint.textContent='Esplora la biblioteca: una finestra nasconde il passaggio per Arsinoe.';}else if(s.group==='eratosthenes'){controls.append(btn('➜ Entra nel crivello interattivo',()=>travel(6),'btn'));}else controls.append(btn('✧ Prosegui',()=>travel(index+1),'btn'));
 }
 function renderEmbed(){let root=el('div','scene');root.innerHTML=`<div class="intro" style="top:63px;max-width:none"><h2>Il crivello di Eratostene</h2><p>Sperimenta: quali numeri restano quando elimini progressivamente i multipli?</p></div><iframe id="crivello" class="embed embedScene" title="Crivello Matica" loading="eager" src="${escapeH(C.crivello)}"></iframe>`;let bar=el('div','embedToolbar');bar.append(btn('Apri in un’altra scheda',()=>window.open(C.crivello,'_blank','noopener'),'btn alt'));bar.append(btn('✧ Ho esplorato il crivello · prosegui',()=>travel(index+1)));root.append(bar);stage.append(root)}
 function createPrimeQuiz(){const nums=shuffle(Array.from({length:30},(_,i)=>i+1));let selected=nums.slice(0,5);if(!selected.includes(1)&&Math.random()<.5)selected[0]=1;return selected.map((n,i)=>{if(n===1||prime(n)||i%2===0)return {type:'choice',text:`Il numero ${n} è…`,choices:['Primo','Composto','Né primo né composto'],correct:n===1?2:prime(n)?0:1,explanation:n===1?'1 ha un solo divisore positivo.':prime(n)?`${n} ha esattamente due divisori positivi.`:`${n} = ${factor(n).join(' × ')}.`};return {type:'factors',text:`Scomponi ${n} in fattori primi. Scrivi per esempio 2×3×3.`,n,explanation:`${n} = ${factor(n).join(' × ')}. L’ordine dei fattori non conta.`}})}

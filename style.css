@@ -17,3 +17,12 @@
 @keyframes fly{0%{transform:scale(.035);filter:brightness(1.1) blur(0)}45%{transform:scale(.20);filter:brightness(1.15) blur(0)}78%{transform:scale(.72);filter:brightness(1.15) blur(1px)}100%{transform:scale(3);filter:brightness(1.3) blur(3px)}}
 @keyframes fadeout{0%{opacity:0}8%{opacity:1}75%{opacity:1}100%{opacity:0}}
 @media(max-width:750px){.intro{top:65px;left:8px;right:8px;max-width:none;padding:17px 42px 17px 18px;}.intro p{font-size:15px;}.intro h1{font-size:23px}.portal-wrap{top:62%;}.pano-panel p{font-size:13px;}}
+
+/* Hotspot trasparenti, ancorati alla texture anche durante zoom e rotazione. */
+.pano-marker.numberhit,.pano-marker.windowhit{background:transparent!important;border:0!important;box-shadow:none!important;padding:0;min-width:44px;min-height:44px;border-radius:8px;color:transparent;}
+.pano-marker.numberhit:hover,.pano-marker.windowhit:hover{background:transparent!important;outline:0;transform:translate(-50%,-50%);}
+.pano-marker:focus-visible,.show-hotspots .pano-marker{outline:2px dashed #ffe6a3!important;background:#ffdd7726!important;}
+.pano-bubble{position:absolute;z-index:6;width:min(310px,calc(100vw - 16px));padding:16px 38px 16px 16px;border:1px solid #ffe0a7;border-radius:16px;background:#0b193bf5;color:#fff7df;box-shadow:0 6px 25px #0008;line-height:1.45;cursor:default;touch-action:pan-y;max-height:calc(100dvh - 180px);overflow:auto;}
+.pano-bubble p{margin:0;font-size:16px;}.bubble-close{position:absolute;right:3px;top:2px;width:36px;height:36px;border:0;background:none;color:white;font-size:26px;}
+.pano-controls{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-end;left:10px;right:10px;bottom:43px;pointer-events:none;}.pano-controls button{pointer-events:auto;min-height:44px;}.pano-hint{max-width:calc(100vw - 20px);width:max-content;text-align:center;}
+@media(max-width:750px){.pano-controls{gap:5px}.pano-controls .btn{font-size:13px;padding:10px}.pano-controls .mini{padding:8px 12px;font-size:13px}.pano-bubble p{font-size:15px}footer{padding:0 7px;font-size:9px}.brand{font-size:14px}.intro{max-height:43dvh;overflow:auto}}

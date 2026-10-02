@@ -3,16 +3,16 @@
 App didattica HTML/CSS/JavaScript per GitHub Pages e LIM / smartphone. Titolarità dei materiali originali: Claudia Bartoli; i servizi e i componenti di terzi restano soggetti alle proprie condizioni.
 
 ## Pubblicazione
-Carica **tutti i file e la cartella `assets` allo stesso livello indicato nello ZIP** nella radice di un repository. Attiva Settings → Pages → Deploy from a branch → main → /(root). L'avvio è `index.html`. Non serve compilazione. La connessione Internet serve per Three.js (CDN), video YouTube e risorsa Crivello esterna.
+Carica **tutti i file allo stesso livello indicato nello ZIP** nella radice di un repository. Attiva Settings → Pages → Deploy from a branch → main → /(root). L'avvio è `index.html`. Non serve compilazione. La connessione Internet serve per Three.js (CDN), video YouTube e risorsa Crivello esterna.
 
 ## Personalizzare i video
-Apri `config.js`: inserisci ID YouTube di 11 caratteri o URL completi nei campi `video1`, `video2`, `video3`, `video5` (facoltativo), `video6`. `video4` contiene l'URL **https://youtu.be/huQlt7OHAg4** fornito per Eratostene. Nessun URL per video 1, 2, 3, 5 o 6 era identificabile nell'ultimo messaggio, quindi i relativi campi sono vuoti e vengono indicati chiaramente nell'app. Le scene rimangono esplorabili per consentire la verifica del prototipo.
+I collegamenti alle lezioni sono già impostati in `config.js`. Il campo `video5` resta facoltativo.
 
 ## Percorso
 1. Atrio numeri primi → videolezione definizione e teorema fondamentale.
-2. Panorama numeri primi/composti: 19 hotspot (1 e primi/composti) e 5 quesiti, soglia 3/5.
+2. Panorama numeri primi/composti: 20 hotspot (1 e primi/composti) e 5 quesiti, soglia 3/5.
 3. Atrio Euclide → video infinità dei primi.
-4. Panorama Euclide con quattro hotspot di approfondimento.
+4. Panorama Euclide con approfondimenti sul personaggio e sulla dimostrazione; una zona trasparente sulla finestra conduce direttamente ad Arsinoe.
 5. Atrio Arsinoe → video ricerca dei primi.
 6. Panorama Eratostene con 4 hotspot; video fornito ed eventuale secondo video.
 7. Crivello esistente via iframe, con possibilità di apertura in nuova scheda.
@@ -35,3 +35,11 @@ Per informazioni: claudiabartoli77@libero.it
 
 
 **Versione GitHub FLAT:** caricare tutti i file di questa cartella insieme nella root del repository, senza sottocartelle.
+
+
+## Revisione interazioni — 2 ottobre 2026
+- Hotspot trasparenti allineati alle coordinate effettive delle immagini; dimensioni aggiornate con la prospettiva e lo zoom, area minima 44 px.
+- Informazioni in fumetti ancorati al numero selezionato, chiudibili e contenuti entro lo schermo.
+- Mostra curiosità evidenzia le aree sensibili; trascinare su un numero non apre il fumetto.
+- Nuova illustrazione per multipli/divisori: 20, 6, 12, 15, 24, 1, 9. Immagine generata con lo strumento integrato: sala monumentale al tramonto, sette numeri tridimensionali separati su piedistalli, senza etichette o numeri riflessi.
+- Verificati sintassi JavaScript, coordinate rispetto alla geometria sferica e destinazione del passaggio segreto. La verifica su un dispositivo fisico resta da effettuare.

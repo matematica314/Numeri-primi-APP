@@ -26,3 +26,33 @@
 .pano-bubble p{margin:0;font-size:16px;}.bubble-close{position:absolute;right:3px;top:2px;width:36px;height:36px;border:0;background:none;color:white;font-size:26px;}
 .pano-controls{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-end;left:10px;right:10px;bottom:43px;pointer-events:none;}.pano-controls button{pointer-events:auto;min-height:44px;}.pano-hint{max-width:calc(100vw - 20px);width:max-content;text-align:center;}
 @media(max-width:750px){.pano-controls{gap:5px}.pano-controls .btn{font-size:13px;padding:10px}.pano-controls .mini{padding:8px 12px;font-size:13px}.pano-bubble p{font-size:15px}footer{padding:0 7px;font-size:9px}.brand{font-size:14px}.intro{max-height:43dvh;overflow:auto}}
+
+/* Revisione: accessi nella scena e comandi lontani dal bordo inferiore. */
+.pano-controls{top:72px;bottom:auto;left:auto;right:12px;max-width:calc(100% - 24px);z-index:7;}
+.pano-hint{top:128px;z-index:5;font-size:12px;}
+.pano-marker.spark{width:46px!important;height:46px!important;min-width:46px;min-height:46px;border:1px solid #ffeac19c;border-radius:50%;background:#fff0b52e;box-shadow:0 0 16px #ffe4ac70;color:#fff5ca;font-size:28px;padding:0;text-shadow:0 0 8px #ffd168;}
+.pano-marker.spark:hover{transform:translate(-50%,-50%);background:#fff0b550;}
+.pano-marker.scenehit{background:transparent;border:0;box-shadow:none;color:transparent;padding:0;}
+.pano-marker.scenehit:hover{transform:translate(-50%,-50%);background:transparent;}
+.pano-marker.signquiz{background:#42250d38;border:0;box-shadow:none;border-radius:4px;color:#fff3cd;font-size:clamp(12px,2.5vw,17px);line-height:1.05;padding:3px;font-weight:bold;text-shadow:0 1px 3px #201000;overflow:hidden;}
+.pano-marker.signquiz:hover{transform:translate(-50%,-50%);background:#ffe8ac26;}
+.pano-marker:focus-visible{outline:2px solid #fff0bc!important;}
+.intro-reopen{top:76px;left:14px;min-height:44px;max-width:calc(100% - 28px);}
+.intro{top:76px;max-height:calc(100dvh - 190px);overflow:auto;}
+.side-actions{top:132px;bottom:auto;right:14px;}
+.embedToolbar{top:66px;bottom:auto;padding:6px 10px;flex-wrap:wrap;z-index:5;}
+.embedScene{position:absolute;top:128px;margin-top:0;height:calc(100% - 220px);}
+.modal{padding-top:68px;padding-bottom:100px;}.modalbox{max-height:100%;}
+@media(max-width:750px){
+footer{top:58px;bottom:auto;height:32px;padding:0 8px;font-size:10px;background:#071028d9;}
+footer button{min-height:30px;}
+.pano-controls{top:100px;right:8px;max-width:calc(100% - 16px);gap:5px;}
+.pano-hint{top:158px;max-width:calc(100% - 20px);}
+.intro-reopen,.intro{top:100px;}.intro{max-height:calc(100dvh - 205px);}
+.side-actions{top:155px;bottom:auto;right:10px;}
+.embedToolbar{top:96px;gap:5px;}.embedToolbar .btn{font-size:12px;padding:8px;min-height:44px;}
+.embedScene{top:158px;height:calc(100% - 250px);}
+.modal{padding:96px 8px 100px;}.modalbox{max-height:100%;padding:34px 16px 18px;}
+.modalbox.videoMode{padding:38px 8px 12px;}
+.pano-bubble{max-height:calc(100dvh - 260px);}
+}

@@ -27,10 +27,19 @@ function playVideo(key,done){const id=videoId(C[key]);const title={video1:'Defin
 modal(body,{wide:true,close:()=>{if(done){watched[key]=true;render()}}});}
 function travel(next){if(changing||next<0||next>=scenes.length)return;changing=true;if(viewer){viewer.dispose();viewer=null}const t=$('#transition');const flight=t.querySelector('.flight');const scene=scenes[next];flight.style.backgroundImage=scene.bg?`url('${A+scene.bg}')`: `url('${A}atrio-primi.png')`;t.classList.remove('hide');setTimeout(()=>{index=next;render()},1450);setTimeout(()=>{t.classList.add('hide');changing=false},2600)}
 function render(){visited.add(index);let s=scenes[index];$('#stageLabel').textContent=s.name;$('#progress').textContent=`✦ ${visited.size} / ${scenes.length}`;stage.innerHTML='';if(s.kind==='video')renderVideoScene(s);else if(s.kind==='pano')renderPanoScene(s);else if(s.kind==='embed')renderEmbed();else renderFinal();}
-function renderVideoScene(s){let root=el('section','scene');root.style.backgroundImage=`url("${A+s.bg}")`;
-const intro=el('div','intro');intro.innerHTML=`<button class="intro-close" aria-label="Chiudi obiettivi">×</button><h1>${escapeH(s.title)}</h1><p>${escapeH(s.desc)}</p><p><strong>OBIETTIVO:</strong> comprendere i numeri primi, la scomposizione e le relazioni tra multipli e divisori.</p><p><strong>DA SAPERE:</strong> definizione di numero primo ed enunciato del Teorema fondamentale dell’aritmetica.</p>`;
-const tab=btn('ⓘ Obiettivi',()=>{intro.classList.remove('hide');tab.classList.add('hide')},'intro-reopen hide');
-intro.querySelector('.intro-close').onclick=()=>{intro.classList.add('hide');tab.classList.remove('hide')};root.append(intro,tab);
+const lessonGoals={
+video1:{objective:'Riconoscere i numeri primi e composti e comprendere il significato della scomposizione in fattori primi.',knowledge:'Definizione di numero primo e di numero composto; perché 1 non appartiene a nessuna delle due categorie; enunciato del Teorema fondamentale dell’aritmetica.'},
+video2:{objective:'Comprendere che i numeri primi sono infiniti.',knowledge:'Comprendere e saper ricostruire i passaggi della dimostrazione per assurdo dell’infinità dei numeri primi: ipotesi di un elenco finito, prodotto dei primi elencati più 1 e contraddizione.'},
+video3:{objective:'Comprendere la logica del crivello di Eratostene e utilizzarlo per individuare i numeri primi entro un limite assegnato.',knowledge:'Escludere 1; conservare ogni primo individuato ed eliminare i suoi multipli maggiori del primo stesso, distinguendo i numeri primi dai composti.'},
+video6:{objective:'Acquisire i concetti di multiplo e divisore di un numero naturale e comprendere la relazione reciproca tra essi.',knowledge:'Stabilire se un numero naturale è multiplo o divisore di un numero dato, usando una moltiplicazione oppure, quando il divisore è diverso da zero, una divisione con resto zero.'}
+};
+function addLessonInfo(root,s){
+const g=lessonGoals[s.video]||lessonGoals.video3;
+const intro=el('div','intro hide');intro.id='lessonInfo';intro.innerHTML=`<button class="intro-close" aria-label="Chiudi obiettivi e da sapere">×</button><h1>${escapeH(s.title)}</h1><p><strong>OBIETTIVI:</strong> ${escapeH(g.objective)}</p><p><strong>DA SAPERE:</strong> ${escapeH(g.knowledge)}</p>`;
+const tab=btn('ⓘ Obiettivi / Da sapere',()=>{intro.classList.remove('hide');tab.classList.add('hide');tab.setAttribute('aria-expanded','true');intro.querySelector('button').focus()},'intro-reopen');tab.setAttribute('aria-expanded','false');tab.setAttribute('aria-controls','lessonInfo');
+intro.querySelector('button').onclick=()=>{intro.classList.add('hide');tab.classList.remove('hide');tab.setAttribute('aria-expanded','false');tab.focus()};root.append(intro,tab);
+}
+function renderVideoScene(s){let root=el('section','scene');root.style.backgroundImage=`url("${A+s.bg}")`;addLessonInfo(root,s);
 let wrap=el('div','portal-wrap'),isWatched=!!watched[s.video],p=el('button','portal');p.setAttribute('aria-label',isWatched?'Attraversa il portale':'Apri la lezione video');p.innerHTML=`<span class="preview" style="background-image:url('${A+(isWatched?s.preview:s.bg)}')"></span><span class="playmark">${isWatched?'✧':'▶'}</span>`;p.onclick=()=>isWatched?travel(index+1):playVideo(s.video,true);wrap.append(p,el('div','portal-label',isWatched?'✦ Clicca per entrare nella stanza':'▶ Clicca per guardare la lezione'));root.append(wrap);let aside=el('div','side-actions');aside.append(btn('Riapri il video',()=>playVideo(s.video,true),'btn alt'));root.append(aside);stage.append(root)}
 
 const factText=n=>n<2?'Non ho una scomposizione in fattori primi.':`Sono ${factor(n).join(' × ')}.`;
@@ -42,14 +51,16 @@ const boxes=[[1,722,460,55,76],[2,455,443,65,84],[3,514,443,60,79],[5,568,444,50
 return boxes.map(([n,x,y,w,h])=>region(n,x/1456,y/720,w/1456,h/720,n===1?'Sono 1: non sono né primo né composto. Ho un solo divisore positivo.':prime(n)?`Sono ${n}: sono primo! Ho esattamente due divisori positivi, 1 e ${n}.`:`Sono ${n}: sono composto! ${n} = ${factor(n).join(' × ')}. Ho più di due divisori positivi.`));
 }
 if(group==='euclid')return [
-region('Euclide',.50,.61,.17,.34,'Euclide scrisse gli Elementi. Nel libro IX si trova una dimostrazione dell’infinità dei numeri primi.'),
-region('La dimostrazione',.48,.84,.18,.14,'I numeri primi sono infiniti. Se supponiamo di averli elencati tutti, il loro prodotto più 1 non è divisibile per nessuno dei primi dell’elenco. È primo oppure ha un fattore primo fuori dall’elenco: in entrambi i casi, l’elenco non era completo.'),
-region('Passaggio segreto per il castello di Arsinoe',.749,.433,.08,.36,'','windowhit',()=>travel(4))];
+region('Euclide',.50,.51,.035,.06,'Sono Euclide. Negli Elementi trovi una dimostrazione dell’infinità dei numeri primi. Esplora le scintille: una ti rivelerà come proseguire.','spark'),
+region('La dimostrazione',.48,.82,.035,.06,'I numeri primi sono infiniti. Supponiamo di averli elencati tutti e consideriamo il loro prodotto più 1. Questo numero non è divisibile per nessuno dei primi dell’elenco: è primo oppure ha un fattore primo fuori dall’elenco. In entrambi i casi, abbiamo una contraddizione.','spark'),
+region('Il passaggio segreto',.648,.67,.035,.06,'Vuoi raggiungere il castello di Arsinoe? Il passaggio è nascosto nel cartello di legno davanti alla finestra. Tocca il cartello per proseguire!','spark'),
+region('Cartello: entra nel castello di Arsinoe',.75,.491,.067,.096,'','scenehit',()=>travel(4))];
 if(group==='eratosthenes')return [
-region('2',.25,.5,.04,.08,'Comincio dal 2 e cancello i suoi multipli maggiori di 2.'),
-region('3',.40,.5,.04,.08,'Il primo numero non cancellato dopo il 2 è il 3. Cancello i suoi multipli maggiori di 3.'),
-region('5',.60,.5,.04,.08,'Proseguo con il primo numero non cancellato, senza cancellare il numero stesso.'),
-region('√',.75,.5,.04,.08,'Per trovare i primi fino a N basta eliminare i multipli dei primi non superiori a √N.')];
+region('Eratostene',.60,.52,.035,.06,'Sono Eratostene. Il mio crivello permette di trovare i numeri primi eliminando i numeri composti. Vuoi provarlo? Tocca la tavola con i numeri appoggiata sul tavolo: è il passaggio al crivello interattivo!','spark'),
+region('Da dove cominciare',.31,.73,.035,.06,'Escludo 1, che non è primo. Parto da 2: lo conservo e cancello tutti i suoi multipli maggiori di 2.','spark'),
+region('Come proseguire',.73,.75,.035,.06,'Scelgo il più piccolo numero non ancora cancellato dopo l’ultimo primo trovato. Lo conservo e cancello i suoi multipli maggiori del numero stesso. Ripeto il procedimento.','spark'),
+region('Quando fermarsi',.28,.48,.035,.06,'Per trovare i primi fino a N, basta eliminare i multipli dei primi non superiori a √N. Ogni composto non maggiore di N ha almeno un fattore primo non superiore a √N.','spark'),
+region('Tavola: entra nel crivello interattivo',.502,.827,.24,.17,'','scenehit',()=>travel(6))];
 return divisorRegions();
 }
 function divisorRegions(){
@@ -74,33 +85,40 @@ this.bubble=el('div','pano-bubble hide');this.bubble.setAttribute('role','status
 }
 listen(n,e,f,o){n.addEventListener(e,f,o);this.listeners.push([n,e,f,o])}
 closeBubble(){this.active=null;this.bubble.classList.add('hide')}
-install(){const c=this.node;let start=null,old=null;this.moved=false;
-this.listen(c,'pointerdown',e=>{if(e.target.closest('.pano-controls,.pano-bubble'))return;start=old=[e.clientX,e.clientY];this.moved=false;this.drag=true;});
-this.listen(c,'pointermove',e=>{if(!this.drag||!old)return;const dx=e.clientX-old[0],dy=e.clientY-old[1];if(Math.hypot(e.clientX-start[0],e.clientY-start[1])>7)this.moved=true;if(this.moved){this.lon-=dx*.13;this.lat=Math.max(-60,Math.min(60,this.lat+dy*.13));c.classList.add('dragging')}old=[e.clientX,e.clientY]});
-const stop=()=>{this.drag=false;old=null;c.classList.remove('dragging')};this.listen(window,'pointerup',stop);this.listen(window,'pointercancel',stop);
-this.listen(c,'click',e=>{if(this.moved){e.stopPropagation();e.preventDefault();return}if(!e.target.closest('button,.pano-bubble'))this.closeBubble()},true);
-this.listen(c,'wheel',e=>{e.preventDefault();this.zoom(e.deltaY*.05)},{passive:false});
+install(){const c=this.node;let start=null,old=null,pointerId=null;this.moved=false;
+// Reset the gesture BEFORE excluding controls: dragging must never disable later clicks.
+this.listen(c,'pointerdown',e=>{this.moved=false;this.drag=false;start=old=null;pointerId=null;if(e.isPrimary===false||e.button>0||e.target.closest('.pano-controls,.pano-bubble'))return;start=old=[e.clientX,e.clientY];pointerId=e.pointerId;this.drag=true;},true);
+this.listen(c,'pointermove',e=>{if(!this.drag||!old||e.pointerId!==pointerId)return;const dx=e.clientX-old[0],dy=e.clientY-old[1];if(Math.hypot(e.clientX-start[0],e.clientY-start[1])>7)this.moved=true;if(this.moved){this.lon-=dx*.13;this.lat=Math.max(-60,Math.min(60,this.lat+dy*.13));c.classList.add('dragging')}old=[e.clientX,e.clientY]});
+const stop=e=>{if(e.pointerId!==pointerId)return;this.drag=false;old=null;pointerId=null;c.classList.remove('dragging');if(e.type==='pointercancel')this.moved=false};this.listen(window,'pointerup',stop);this.listen(window,'pointercancel',stop);
+this.listen(c,'click',e=>{const dragged=this.moved;this.moved=false;if(dragged&&e.detail!==0&&!e.target.closest('.pano-controls,.pano-bubble')){e.stopPropagation();e.preventDefault();return}if(!e.target.closest('button,.pano-bubble'))this.closeBubble()},true);
+this.listen(c,'wheel',e=>{if(e.target.closest('.pano-bubble,.pano-controls'))return;e.preventDefault();this.zoom(e.deltaY*.05)},{passive:false});
 this.ro=new ResizeObserver(()=>{if(this.dead)return;const w=c.clientWidth,h=c.clientHeight;if(w&&h){this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.renderer.setSize(w,h)}});this.ro.observe(c);
 }
-markers(items){this.markerObjects=items.map(item=>{const b=btn('',()=>{if(item.action){item.action();return}this.active=item;this.bubbleText.textContent=item.text;this.bubble.classList.remove('hide')},'pano-marker '+item.type);b.setAttribute('aria-label','Esplora: '+item.label);this.node.append(b);return {item,b}})}
+markers(items){this.markerObjects=items.map(item=>{const b=btn(item.type==='spark'?'✦':item.type==='signquiz'?'Affronta i quesiti':'',()=>{if(item.action){this.closeBubble();item.action();return}this.active=item;this.bubbleText.textContent=item.text;this.bubble.classList.remove('hide')},'pano-marker '+item.type);b.setAttribute('aria-label',item.type==='signquiz'?'Affronta i quesiti':item.action?item.label:'Esplora: '+item.label);this.node.append(b);return {item,b}})}
 project(u,v){const t=u*Math.PI*2,p=v*Math.PI;const vec=new THREE.Vector3(490*Math.sin(p)*Math.cos(t),490*Math.cos(p),490*Math.sin(p)*Math.sin(t));if(vec.clone().applyMatrix4(this.camera.matrixWorldInverse).z>=-1)return null;vec.project(this.camera);return {x:(vec.x+1)*this.node.clientWidth/2,y:(1-vec.y)*this.node.clientHeight/2}}
 tick(){if(this.dead)return;const phi=THREE.MathUtils.degToRad(90-this.lat),theta=THREE.MathUtils.degToRad(this.lon);this.camera.lookAt(new THREE.Vector3(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta)));this.camera.updateMatrixWorld();const w=this.node.clientWidth,h=this.node.clientHeight;
-for(const {item,b} of this.markerObjects){const q=this.project(item.u,item.v);const corners=[[-1,-1],[1,-1],[-1,1],[1,1]].map(([x,y])=>this.project(item.u+x*item.uw/2,item.v+y*item.vh/2));if(!q||corners.some(c=>!c)||q.x< -100||q.x>w+100||q.y< -100||q.y>h+100){b.style.display='none';continue}const xs=corners.map(c=>c.x),ys=corners.map(c=>c.y);const bw=Math.max(44,Math.max(...xs)-Math.min(...xs)),bh=Math.max(44,Math.max(...ys)-Math.min(...ys));b.style.cssText=`display:block;left:${q.x}px;top:${q.y}px;width:${bw}px;height:${bh}px`;
+for(const {item,b} of this.markerObjects){const q=this.project(item.u,item.v);const corners=[[-1,-1],[1,-1],[-1,1],[1,1]].map(([x,y])=>this.project(item.u+x*item.uw/2,item.v+y*item.vh/2));if(!q||corners.some(c=>!c)||q.x< -100||q.x>w+100||q.y< -100||q.y>h+100){b.style.display='none';continue}const xs=corners.map(c=>c.x),ys=corners.map(c=>c.y);const bw=item.type==='spark'?46:Math.max(44,Math.max(...xs)-Math.min(...xs)),bh=item.type==='spark'?46:Math.max(44,Math.max(...ys)-Math.min(...ys));b.style.cssText=`display:block;left:${q.x}px;top:${q.y}px;width:${bw}px;height:${bh}px`;
 }
-if(this.active){const q=this.project(this.active.u,this.active.v-this.active.vh/2);if(!q||q.x<0||q.x>w||q.y<0||q.y>h)this.bubble.style.visibility='hidden';else{this.bubble.style.visibility='visible';const bw=this.bubble.offsetWidth,bh=this.bubble.offsetHeight;this.bubble.style.left=Math.max(8,Math.min(w-bw-8,q.x-bw/2))+'px';this.bubble.style.top=Math.max(64,Math.min(h-bh-110,q.y-bh-12))+'px';}}
+if(this.active){const q=this.project(this.active.u,this.active.v-this.active.vh/2);if(!q||q.x<0||q.x>w||q.y<0||q.y>h)this.bubble.style.visibility='hidden';else{this.bubble.style.visibility='visible';const bw=this.bubble.offsetWidth,bh=this.bubble.offsetHeight;this.bubble.style.left=Math.max(8,Math.min(w-bw-8,q.x-bw/2))+'px';this.bubble.style.top=Math.max(w<=750?150:72,Math.min(h-bh-105,q.y-bh-12))+'px';}}
 this.renderer.render(this.scene,this.camera);this.raf=requestAnimationFrame(()=>this.tick());
 }
 zoom(d){this.fov=Math.max(32,Math.min(98,this.fov+d));this.camera.fov=this.fov;this.camera.updateProjectionMatrix()}
 dispose(){this.dead=true;cancelAnimationFrame(this.raf);this.ro?.disconnect();this.listeners.forEach(([n,e,f,o])=>n.removeEventListener(e,f,o));this.mat.map?.dispose();this.mat.dispose();this.sphere.geometry.dispose();this.renderer.dispose();this.renderer.domElement.remove()}
 }
-function renderPanoScene(s){const node=el('div','pano');stage.append(node);if(!window.THREE){node.innerHTML=`<div class="scene" style="background-image:url('${A+s.bg}')"><div class="intro"><h2>Impossibile caricare il visore 360°</h2><p>Serve la libreria Three.js e una connessione a Internet.</p></div></div>`;return}viewer=new Pano(node,s.bg);const hint=el('div','pano-hint','Trascina per esplorare · clicca direttamente sui numeri · scorri per zoomare');node.append(hint);setTimeout(()=>hint.remove(),7000);
-const markers=makeMarkers(s.group);viewer.markers(markers);const controls=el('div','pano-controls');node.append(controls);controls.append(btn('＋',()=>viewer.zoom(-10),'mini'),btn('−',()=>viewer.zoom(10),'mini'),btn('Mostra curiosità',e=>{node.classList.toggle('show-hotspots');},'mini'));
+function openSceneQuiz(s){viewer?.closeBubble();if(quizPassed[index]){travel(index+1);return}startQuiz(s.quiz,5,3,()=>{quizPassed[index]=true;travel(index+1)})}
+function renderPanoScene(s){const node=el('div','pano');stage.append(node);if(!window.THREE){node.innerHTML=`<div class="scene" style="background-image:url('${A+s.bg}')"><div class="intro"><h2>Impossibile caricare il visore 360°</h2><p>Serve la libreria Three.js e una connessione a Internet.</p></div></div>`;return}viewer=new Pano(node,s.bg);
+const hints={primes:'Tocca i numeri per conoscerli. Il cartello di legno apre i quesiti.',euclid:'Tocca le scintille e scopri il passaggio segreto.',eratosthenes:'Tocca le scintille: Eratostene ti rivelerà come entrare nel crivello.',divisors:'Tocca i numeri, poi affronta i quesiti con il pulsante in alto.'};
+const hint=el('div','pano-hint',hints[s.group]);node.append(hint);setTimeout(()=>hint.remove(),7000);
+const markers=makeMarkers(s.group);
+if(s.group==='primes')markers.push(region('Affronta i quesiti',.766,.509,.057,.075,'','signquiz',()=>openSceneQuiz(s)));
+viewer.markers(markers);
+const controls=el('div','pano-controls');node.append(controls);const zi=btn('＋',()=>viewer.zoom(-10),'mini'),zo=btn('−',()=>viewer.zoom(10),'mini');zi.setAttribute('aria-label','Aumenta zoom');zo.setAttribute('aria-label','Riduci zoom');controls.append(zi,zo);
 if(s.group==='primes')viewer.lon=120;
-if(s.group==='euclid')viewer.lon=220;
-if(s.group==='eratosthenes'){controls.append(btn('▶ Video Eratostene',()=>playVideo('video4'),'mini'));if(C.video5)controls.append(btn('▶ Secondo video',()=>playVideo('video5'),'mini'))}
-if(s.quiz){controls.append(btn(quizPassed[index]?'✓ Quiz superato · prosegui':'✦ Affronta 5 quesiti',()=>quizPassed[index]?travel(index+1):startQuiz(s.quiz,5,3,()=>{quizPassed[index]=true;travel(index+1)}),'btn'));}else if(s.group==='euclid'){hint.textContent='Esplora la biblioteca: una finestra nasconde il passaggio per Arsinoe.';}else if(s.group==='eratosthenes'){controls.append(btn('➜ Entra nel crivello interattivo',()=>travel(6),'btn'));}else controls.append(btn('✧ Prosegui',()=>travel(index+1),'btn'));
+if(s.group==='euclid'){viewer.lon=220;viewer.lat=-12;}
+if(s.group==='eratosthenes'){viewer.lon=205;viewer.lat=-22;controls.append(btn('▶ Video Eratostene',()=>playVideo('video4'),'mini'));if(C.video5)controls.append(btn('▶ Secondo video',()=>playVideo('video5'),'mini'));}
+if(s.group==='divisors')controls.append(btn(quizPassed[index]?'✓ Prosegui':'✦ Affronta i quesiti',()=>openSceneQuiz(s),'btn'));
 }
-function renderEmbed(){let root=el('div','scene');root.innerHTML=`<div class="intro" style="top:63px;max-width:none"><h2>Il crivello di Eratostene</h2><p>Sperimenta: quali numeri restano quando elimini progressivamente i multipli?</p></div><iframe id="crivello" class="embed embedScene" title="Crivello Matica" loading="eager" src="${escapeH(C.crivello)}"></iframe>`;let bar=el('div','embedToolbar');bar.append(btn('Apri in un’altra scheda',()=>window.open(C.crivello,'_blank','noopener'),'btn alt'));bar.append(btn('✧ Ho esplorato il crivello · prosegui',()=>travel(index+1)));root.append(bar);stage.append(root)}
+function renderEmbed(){let root=el('div','scene');root.innerHTML=`<iframe id="crivello" class="embed embedScene" title="Crivello Matica" loading="eager" src="${escapeH(C.crivello)}"></iframe>`;let bar=el('div','embedToolbar');bar.append(btn('Apri in un’altra scheda',()=>window.open(C.crivello,'_blank','noopener'),'btn alt'));bar.append(btn('✧ Ho esplorato · prosegui',()=>travel(index+1)));root.append(bar);stage.append(root)}
 function createPrimeQuiz(){const nums=shuffle(Array.from({length:30},(_,i)=>i+1));let selected=nums.slice(0,5);if(!selected.includes(1)&&Math.random()<.5)selected[0]=1;return selected.map((n,i)=>{if(n===1||prime(n)||i%2===0)return {type:'choice',text:`Il numero ${n} è…`,choices:['Primo','Composto','Né primo né composto'],correct:n===1?2:prime(n)?0:1,explanation:n===1?'1 ha un solo divisore positivo.':prime(n)?`${n} ha esattamente due divisori positivi.`:`${n} = ${factor(n).join(' × ')}.`};return {type:'factors',text:`Scomponi ${n} in fattori primi. Scrivi per esempio 2×3×3.`,n,explanation:`${n} = ${factor(n).join(' × ')}. L’ordine dei fattori non conta.`}})}
 function createDivQuiz(){const pool=[];for(let a=2;a<=12;a++)for(let b=2;b<=12;b++){pool.push({type:'choice',text:`${a} è divisore di ${a*b}?`,choices:['Sì','No'],correct:0,explanation:`${a*b} = ${a} × ${b}.`});pool.push({type:'choice',text:`${a*b} è multiplo di ${a}?`,choices:['Sì','No'],correct:0,explanation:`${a*b} = ${a} × ${b}.`});let n=a*b+1;pool.push({type:'choice',text:`${a} è divisore di ${n}?`,choices:['Sì','No'],correct:1,explanation:`${n} diviso ${a} non dà un quoziente intero.`})}return shuffle(pool).slice(0,5)}
 // Bank of 50+ independently constructed, editable questions; options randomized at runtime.
